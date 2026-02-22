@@ -1,2 +1,0 @@
-# JavSensei
-javsensei me
