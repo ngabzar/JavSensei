@@ -29,6 +29,7 @@ interface SavedDeck {
 
 @Component({
   selector: 'app-flashcard',
+  standalone: true,
   imports: [CommonModule, RouterLink, FormsModule, KanaToRomajiPipe],
   providers: [KanaToRomajiPipe],
   styles: [`
@@ -69,7 +70,6 @@ interface SavedDeck {
     <div class="min-h-screen pb-24 transition-colors"
          [class.bg-slate-950]="ts.isDarkMode()" [class.bg-gray-50]="!ts.isDarkMode()">
 
-      <!-- ── Header ──────────────────────────────────────────── -->
       <div class="sticky top-0 z-20 p-4 border-b flex items-center gap-4 transition-colors"
            [class.bg-slate-950]="ts.isDarkMode()" [class.border-slate-800]="ts.isDarkMode()"
            [class.bg-white]="!ts.isDarkMode()" [class.border-gray-200]="!ts.isDarkMode()">
@@ -88,9 +88,6 @@ interface SavedDeck {
 
       <div class="p-4">
 
-        <!-- ══════════════════════════════════════
-             MENU
-             ══════════════════════════════════════ -->
         @if (view() === 'menu') {
           <div class="animate-in fade-in duration-300 space-y-4">
 
@@ -132,7 +129,6 @@ interface SavedDeck {
               }
             </div>
 
-            <!-- Shuffle on menu -->
             <div class="mt-6 p-4 rounded-xl border flex items-center justify-between"
                  [class.bg-slate-900]="ts.isDarkMode()" [class.border-slate-800]="ts.isDarkMode()"
                  [class.bg-white]="!ts.isDarkMode()" [class.border-gray-200]="!ts.isDarkMode()">
@@ -186,9 +182,6 @@ interface SavedDeck {
           </div>
         }
 
-        <!-- ══════════════════════════════════════
-             CONFIG
-             ══════════════════════════════════════ -->
         @if (view() === 'config') {
           <div class="animate-in fade-in duration-300 space-y-6">
             <section>
@@ -235,9 +228,6 @@ interface SavedDeck {
           </div>
         }
 
-        <!-- ══════════════════════════════════════
-             ADD CARDS
-             ══════════════════════════════════════ -->
         @if (view() === 'add_cards') {
           <div class="animate-in fade-in duration-300 space-y-4">
             <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()"
@@ -302,30 +292,23 @@ interface SavedDeck {
           </div>
         }
 
-        <!-- ══════════════════════════════════════
-             SESSION
-             ══════════════════════════════════════ -->
         @if (view() === 'session' && currentCard()) {
           <div class="flex flex-col items-center animate-in fade-in duration-300">
 
-            <!-- Counter row -->
             <div class="w-full max-w-sm flex justify-between items-center mb-3">
               <div class="text-sm font-medium opacity-70">
                 {{ ts.get('flashcard.card') }} {{ currentIndex() + 1 }} {{ ts.get('flashcard.of') }} {{ deck().length }}
               </div>
-              <!-- Manual full-TTS play button -->
               <button (click)="isSpeaking() ? stopSpeaking() : speakFull()"
                       class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border transition"
                       [class.bg-blue-900/40]="ts.isDarkMode()" [class.border-blue-700]="ts.isDarkMode()" [class.text-blue-300]="ts.isDarkMode()"
                       [class.bg-blue-50]="!ts.isDarkMode()" [class.border-blue-300]="!ts.isDarkMode()" [class.text-blue-700]="!ts.isDarkMode()">
                 @if (isSpeaking()) {
-                  <!-- Stop icon -->
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
                     <path d="M5.25 3A2.25 2.25 0 0 0 3 5.25v9.5A2.25 2.25 0 0 0 5.25 17h9.5A2.25 2.25 0 0 0 17 14.75v-9.5A2.25 2.25 0 0 0 14.75 3h-9.5Z"/>
                   </svg>
                   Stop
                 } @else {
-                  <!-- Play icon -->
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
                     <path d="M6.3 2.84A1.5 1.5 0 0 0 4 4.11v11.78a1.5 1.5 0 0 0 2.3 1.27l9.344-5.891a1.5 1.5 0 0 0 0-2.538L6.3 2.84Z"/>
                   </svg>
@@ -334,12 +317,10 @@ interface SavedDeck {
               </button>
             </div>
 
-            <!-- ── Settings Panel (4 toggles) ── -->
             <div class="w-full max-w-sm mb-3 px-3 py-2.5 rounded-xl border flex flex-wrap gap-x-4 gap-y-2 items-center"
                  [class.bg-slate-900]="ts.isDarkMode()" [class.border-slate-800]="ts.isDarkMode()"
                  [class.bg-gray-100]="!ts.isDarkMode()" [class.border-gray-200]="!ts.isDarkMode()">
 
-              <!-- Auto TTS -->
               <div class="flex items-center gap-1.5">
                 <button class="mini-toggle" (click)="toggleAutoPlay()"
                         [class.bg-green-600]="autoPlay()"
@@ -352,7 +333,6 @@ interface SavedDeck {
 
               <span class="opacity-20 text-xs">|</span>
 
-              <!-- Romaji -->
               <div class="flex items-center gap-1.5">
                 <button class="mini-toggle" (click)="showRomaji.set(!showRomaji())"
                         [class.bg-blue-600]="showRomaji()"
@@ -365,7 +345,6 @@ interface SavedDeck {
 
               <span class="opacity-20 text-xs">|</span>
 
-              <!-- Hiragana -->
               <div class="flex items-center gap-1.5">
                 <button class="mini-toggle" (click)="showHiragana.set(!showHiragana())"
                         [class.bg-purple-600]="showHiragana()"
@@ -378,7 +357,6 @@ interface SavedDeck {
 
               <span class="opacity-20 text-xs">|</span>
 
-              <!-- Shuffle -->
               <div class="flex items-center gap-1.5">
                 <button class="mini-toggle" (click)="shuffle.set(!shuffle())"
                         [class.bg-orange-500]="shuffle()"
@@ -390,13 +368,11 @@ interface SavedDeck {
               </div>
             </div>
 
-            <!-- Speaking indicator bar -->
             @if (isSpeaking()) {
               <div class="w-full max-w-sm mb-3 px-3 py-2 rounded-lg border flex items-center justify-between animate-in fade-in duration-200"
                    [class.bg-green-950/40]="ts.isDarkMode()" [class.border-green-800]="ts.isDarkMode()"
                    [class.bg-green-50]="!ts.isDarkMode()" [class.border-green-300]="!ts.isDarkMode()">
                 <div class="flex items-center gap-2">
-                  <!-- animated waveform bars -->
                   <div class="flex gap-0.5 items-end" style="height:1rem">
                     <span class="speaking-bar inline-block w-1 rounded-full" style="height:60%;animation-delay:0s"
                           [class.bg-green-400]="ts.isDarkMode()" [class.bg-green-500]="!ts.isDarkMode()"></span>
@@ -423,20 +399,17 @@ interface SavedDeck {
               </div>
             }
 
-            <!-- ── Flashcard ── -->
             <div (click)="flipCard()"
                  class="card-container w-full max-w-sm cursor-pointer mb-5"
                  style="height:16rem"
                  [class.flipped]="isFlipped()">
               <div class="card-inner">
 
-                <!-- FRONT -->
                 <div class="card-front rounded-2xl border shadow-lg relative"
                      [class.bg-slate-900]="ts.isDarkMode()" [class.border-slate-700]="ts.isDarkMode()"
                      [class.bg-white]="!ts.isDarkMode()" [class.border-gray-200]="!ts.isDarkMode()">
                   <div class="text-6xl font-bold font-serif">{{ currentCard().front }}</div>
 
-                  <!-- Hiragana/kana reading below kanji/vocab -->
                   @if (showHiragana() && currentCard().sub) {
                     <div class="text-xl mt-2 font-serif animate-in fade-in duration-200"
                          [class.text-purple-400]="ts.isDarkMode()" [class.text-purple-600]="!ts.isDarkMode()">
@@ -444,14 +417,12 @@ interface SavedDeck {
                     </div>
                   }
 
-                  <!-- Romaji -->
                   @if (showRomaji() && romajiForCurrentCard()) {
                     <div class="text-sm mt-1 opacity-60 font-mono animate-in fade-in duration-200">
                       {{ romajiForCurrentCard() }}
                     </div>
                   }
 
-                  <!-- TTS front button -->
                   <button (click)="$event.stopPropagation(); tts.speak(currentCard().front, 'ja-JP')"
                           class="absolute top-2 right-2 p-2 rounded-full transition"
                           [class.hover:bg-slate-800]="ts.isDarkMode()" [class.text-blue-400]="ts.isDarkMode()"
@@ -462,7 +433,6 @@ interface SavedDeck {
                   </button>
                 </div>
 
-                <!-- BACK -->
                 <div class="card-back rounded-2xl border shadow-lg relative"
                      [class.bg-slate-800]="ts.isDarkMode()" [class.border-slate-600]="ts.isDarkMode()"
                      [class.bg-gray-100]="!ts.isDarkMode()" [class.border-gray-300]="!ts.isDarkMode()">
@@ -476,7 +446,6 @@ interface SavedDeck {
                     }
                   }
 
-                  <!-- TTS back button -->
                   <button (click)="$event.stopPropagation(); tts.speak(currentCard().back, 'id-ID')"
                           class="absolute top-2 right-2 p-2 rounded-full transition"
                           [class.hover:bg-slate-700]="ts.isDarkMode()" [class.text-yellow-400]="ts.isDarkMode()"
@@ -489,12 +458,10 @@ interface SavedDeck {
               </div>
             </div>
 
-            <!-- ── Contoh Kalimat Panel ── -->
             @if (currentCard().example) {
               <div class="w-full max-w-sm mb-4 rounded-xl border overflow-hidden"
                    [class.bg-slate-900]="ts.isDarkMode()" [class.border-slate-700]="ts.isDarkMode()"
                    [class.bg-white]="!ts.isDarkMode()" [class.border-gray-200]="!ts.isDarkMode()">
-                <!-- panel header -->
                 <div class="flex items-center justify-between px-4 py-2.5 border-b"
                      [class.bg-slate-800]="ts.isDarkMode()" [class.border-slate-700]="ts.isDarkMode()"
                      [class.bg-amber-50]="!ts.isDarkMode()" [class.border-gray-200]="!ts.isDarkMode()">
@@ -515,7 +482,6 @@ interface SavedDeck {
                     🔊 Putar
                   </button>
                 </div>
-                <!-- panel body -->
                 <div class="px-4 py-3 space-y-1">
                   <p class="text-base font-semibold leading-relaxed"
                      [class.text-slate-100]="ts.isDarkMode()" [class.text-slate-800]="!ts.isDarkMode()">
@@ -528,7 +494,6 @@ interface SavedDeck {
               </div>
             }
 
-            <!-- ── Nav buttons ── -->
             <div class="w-full max-w-sm space-y-4">
               <div class="flex gap-3">
                 <button (click)="prevCard()"
@@ -545,7 +510,6 @@ interface SavedDeck {
                 </button>
               </div>
 
-              <!-- ── Drawing Canvas Panel ── -->
               <div class="w-full flex flex-col items-center p-3 rounded-xl border"
                    [class.bg-slate-900]="ts.isDarkMode()" [class.border-slate-800]="ts.isDarkMode()"
                    [class.bg-gray-100]="!ts.isDarkMode()" [class.border-gray-200]="!ts.isDarkMode()">
@@ -611,12 +575,7 @@ interface SavedDeck {
           </div>
         }
 
-      </div><!-- /p-4 -->
-
-      <!-- ══════════════════════════════════════
-           DELETE MODAL
-           ══════════════════════════════════════ -->
-      @if (deckToDelete()) {
+      </div>@if (deckToDelete()) {
         <div class="fixed inset-0 z-50 flex items-center justify-center px-4">
           <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" (click)="deckToDelete.set(null)"></div>
           <div class="relative border rounded-2xl p-6 w-full max-w-sm shadow-2xl animate-in fade-in zoom-in duration-200"
@@ -653,8 +612,7 @@ interface SavedDeck {
         </div>
       }
 
-    </div><!-- /min-h-screen -->
-  `
+    </div>`
 })
 export class FlashcardComponent implements OnInit {
 
@@ -781,7 +739,10 @@ export class FlashcardComponent implements OnInit {
       const _index   = this.currentIndex(); // reactive dependency
       const inSession = this.view() === 'session';
       if (on && inSession) {
-        setTimeout(() => this.speakFull(), 450);
+        // Delay slight to let the card UI settle
+        setTimeout(() => {
+          if (this.autoPlay()) this.speakFull();
+        }, 1000);
       }
     });
   }
@@ -862,12 +823,23 @@ export class FlashcardComponent implements OnInit {
   flipCard(): void { this.isFlipped.update(v => !v); }
 
   nextCard(): void {
-    this.stopSpeaking(); this.isFlipped.set(false); this.clearCanvas();
-    setTimeout(() => this.currentIndex.update(i => (i + 1) % this.deck().length), 150);
+    this.stopSpeaking();
+    this.isFlipped.set(false);
+    this.clearCanvas();
+
+    // Check if it's the end of deck
+    if (this.currentIndex() >= this.deck().length - 1) {
+      this.autoPlay.set(false); // Stop auto playing at the end
+      return;
+    }
+
+    setTimeout(() => this.currentIndex.update(i => i + 1), 150);
   }
 
   prevCard(): void {
-    this.stopSpeaking(); this.isFlipped.set(false); this.clearCanvas();
+    this.stopSpeaking();
+    this.isFlipped.set(false);
+    this.clearCanvas();
     setTimeout(() => this.currentIndex.update(i => (i - 1 + this.deck().length) % this.deck().length), 150);
   }
 
@@ -970,7 +942,8 @@ export class FlashcardComponent implements OnInit {
   }
 
   stopSpeaking(): void {
-    this.cancelRef = { cancelled: true };   // invalidate any running chain
+    this.cancelRef.cancelled = true;
+    this.cancelRef = { cancelled: false }; // Create new ref
     if (typeof window !== 'undefined' && window.speechSynthesis) {
       window.speechSynthesis.cancel();
     }
@@ -978,16 +951,16 @@ export class FlashcardComponent implements OnInit {
   }
 
   /**
-   * Full TTS sequence:
-   * 1. 🇯🇵 kata Jepang (rate 0.9)
-   * 2. ⏸ jeda
-   * 3. 🇮🇩 arti Indonesia (rate 1.0)
-   * 4. ⏸ jeda
-   * 5. 🇯🇵 contoh kalimat penuh (rate 0.85)
-   * 6. ⏸ jeda
-   * 7. 🇯🇵 spell per kata/karakter (rate 0.45)
-   * 8. ⏸ jeda
-   * 9. 🇮🇩 arti contoh kalimat (rate 1.0)
+   * FULL TTS SEQUENCE:
+   * 1. 🇯🇵 Kata Depan (0.85 rate)
+   * 2. ⏸ Jeda
+   * 3. 🇮🇩 Arti Belakang (1.0 rate)
+   * 4. ⏸ Jeda
+   * 5. 🇯🇵 Contoh Kalimat Full (0.8 rate)
+   * 6. ⏸ Jeda
+   * 7. 🇯🇵 Spell Per Karakter (0.45 rate - Pelan)
+   * 8. ⏸ Jeda
+   * 9. 🇮🇩 Arti Contoh Kalimat (1.0 rate)
    */
   speakFull(): void {
     const card = this.currentCard();
@@ -1005,23 +978,28 @@ export class FlashcardComponent implements OnInit {
       return uu;
     };
 
-    utts.push(u(card.front, 'ja-JP', 0.9));
+    // 1. Jepang Depan
+    utts.push(u(card.front, 'ja-JP', 0.85));
+    // 2. Indonesia Belakang
     utts.push(u(card.back,  'id-ID', 1.0));
 
     if (card.example) {
-      utts.push(u(card.example, 'ja-JP', 0.85));
-      for (const p of this.splitJP(card.example)) {
+      // 3. Contoh Kalimat Normal
+      utts.push(u(card.example, 'ja-JP', 0.8));
+      // 4. Spell Per Kata/Karakter (Sangat Pelan)
+      const parts = this.splitJP(card.example);
+      parts.forEach(p => {
         utts.push(u(p, 'ja-JP', 0.45));
-      }
+      });
+      // 5. Arti Contoh
       if (card.exampleMeaning) {
         utts.push(u(card.exampleMeaning, 'id-ID', 1.0));
       }
     }
 
-    this.runChain(utts, ref, 650);
+    this.runChain(utts, ref, 800);
   }
 
-  /** Play only the example-sentence sequence */
   speakExample(): void {
     const card = this.currentCard();
     if (!card?.example) return;
@@ -1038,15 +1016,16 @@ export class FlashcardComponent implements OnInit {
       return uu;
     };
 
-    utts.push(u(card.example, 'ja-JP', 0.85));
-    for (const p of this.splitJP(card.example)) {
+    utts.push(u(card.example, 'ja-JP', 0.8));
+    const parts = this.splitJP(card.example);
+    parts.forEach(p => {
       utts.push(u(p, 'ja-JP', 0.45));
-    }
+    });
     if (card.exampleMeaning) {
       utts.push(u(card.exampleMeaning, 'id-ID', 1.0));
     }
 
-    this.runChain(utts, ref, 650);
+    this.runChain(utts, ref, 800);
   }
 
   private runChain(
@@ -1055,25 +1034,42 @@ export class FlashcardComponent implements OnInit {
     pauseMs: number
   ): void {
     const next = (i: number) => {
-      if (ref.cancelled || i >= utts.length) { this.isSpeaking.set(false); return; }
+      if (ref.cancelled) { this.isSpeaking.set(false); return; }
+
+      // End of sequence for CURRENT card
+      if (i >= utts.length) {
+        this.isSpeaking.set(false);
+
+        // LOGIKA AUTO-PLAY: Pindah kartu jika mode Auto aktif
+        if (this.autoPlay()) {
+          setTimeout(() => {
+            if (!ref.cancelled && this.autoPlay()) {
+              this.nextCard();
+            }
+          }, 1500); // Tunggu 1.5 detik sebelum pindah
+        }
+        return;
+      }
+
       const u = utts[i];
-      u.onend   = () => { if (!ref.cancelled) { setTimeout(() => next(i + 1), pauseMs); } else { this.isSpeaking.set(false); } };
+      u.onstart = () => { if (ref.cancelled) window.speechSynthesis.cancel(); };
+      u.onend   = () => {
+        if (!ref.cancelled) {
+          setTimeout(() => next(i + 1), pauseMs);
+        } else {
+          this.isSpeaking.set(false);
+        }
+      };
       u.onerror = () => { this.isSpeaking.set(false); };
       window.speechSynthesis.speak(u);
     };
     next(0);
   }
 
-  /**
-   * Split Japanese text for slow spelling.
-   * Space-separated → split on spaces.
-   * Otherwise → split per character, keeping only Japanese script glyphs.
-   */
   private splitJP(text: string): string[] {
-    if (text.includes(' ')) return text.split(' ').filter(Boolean);
-    return [...text].filter(ch =>
-      /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF\uFF00-\uFFEF]/.test(ch)
-    );
+    const cleanText = text.replace(/[、。！？]/g, '');
+    if (cleanText.includes(' ')) return cleanText.split(' ').filter(v => v.trim().length > 0);
+    return [...cleanText].filter(ch => ch.trim().length > 0);
   }
 
   // ── Shuffle ────────────────────────────────────────────────────────────────────
