@@ -72,7 +72,7 @@ export interface Question {
   options?: string[]; // Untuk Pilihan Ganda
   correct?: number;   // Index jawaban benar (Pilihan Ganda)
   correctAnswers?: string[]; // Jawaban benar (Essay)
-  type: 'KANA' | 'KANJI' | 'VOCAB' | 'JLPT_N5' | 'JLPT_N4' | 'JFT_A2' | 'SENTENCE' | 'PARTICLE';
+  type: 'KANA' | 'KANJI' | 'VOCAB' | 'JLPT_N5' | 'JLPT_N4' | 'JLPT_N3' | 'JFT_A2' | 'SENTENCE' | 'PARTICLE';
   inputType: 'CHOICE' | 'ESSAY'; // Tipe Input
   explanation?: string; // Penjelasan singkat
 }
